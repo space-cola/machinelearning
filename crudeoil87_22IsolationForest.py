@@ -12,7 +12,7 @@ from sklearn.ensemble import IsolationForest
 from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score
 
 dataSheet = pd.read_csv("EuropeBSP.csv") #read the datasheet from .csv
-dataSheet = dataSheet.to_numpy() #convet the datasheet to a numpy array
+dataSheet = dataSheet.to_numpy() #cnovert the datasheet to a numpy array for processing with ML
 
 def machineTrain():
     global features #make the features a global variable as they will be used to plot
