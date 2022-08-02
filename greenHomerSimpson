@@ -1,0 +1,38 @@
+"""
+Created on Tue Aug 2 16:04:27 2022
+
+@author: space-cola
+"""
+
+import numpy as np
+import matplotlib.pyplot as plt 
+from sklearn.cluster import KMeans
+import pickle
+
+def imagePrep():
+    global imageRGB
+    imageRGB = plt.imread('HomerSimpson.jpg') #stores the raw data of the Homer Simpson image in a numpy array
+    plt.imshow(imageRGB) #displays the image in it's original format
+    global prepImage
+    prepImage = imageRGB.reshape(-1,3) #reshape of image to make it 2D
+    
+imagePrep()
+
+def clusterModel():
+    model = KMeans(n_clusters=7, random_state=0) #n of cluster - exact or as close to the total number of colours
+    model.fit(prepImage) #fit to train the model
+    global predictions
+    predictions = model.predict(prepImage) #predict the common colours or "clusters"
+    predictions = predictions.reshape((imageRGB.shape[0],imageRGB.shape[1])) #reshape predicitons into 2D array
+    plt.imshow(predictions, cmap = 'gray') #show the Homer as a plot based on the machine's cluster interpretation
+
+clusterModel()
+
+def makeHomerGreen():
+    clusterLocate = np.where (predictions == 2) #locate all instances of cluster 2 - in this 
+    # instance this is the cluster that represents Homer's skin colour
+    greenHomer = imageRGB.copy() #copy the original imported image to transpose colours
+    greenHomer [clusterLocate[0],clusterLocate[1],:] = [0,255,0] #make Homer's skin green using the max RGB green value
+    plt.imshow(greenHomer) #plot the green Homer image
+    
+makeHomerGreen()
