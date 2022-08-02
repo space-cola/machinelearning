@@ -22,7 +22,7 @@ def clusterModel():
     model.fit(prepImage) #fit to train the model
     global predictions
     predictions = model.predict(prepImage) #predict the common colours or "clusters"
-    predictions = predictions.reshape((imageRGB.shape[0],imageRGB.shape[1])) #reshape predicitons into 2D array
+    predictions = predictions.reshape((imageRGB.shape[0],imageRGB.shape[1])) #reshape predictions into 2D array
     plt.imshow(predictions, cmap = 'gray') #show the Homer as a plot based on the machine's cluster interpretation
 
 clusterModel()
