@@ -1,0 +1,51 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Aug  2 20:26:11 2022
+
+@author: space-cola
+"""
+
+import numpy as np
+import pandas as pd
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix, accuracy_score, recall_score, precision_score, f1_score
+
+df = pd.read_csv('pingdata.csv') #this is a data sheet of random ping returns and packet loss
+data = df.to_numpy() 
+
+def dataPrep():
+    global classLabels, features, trF, tsF, trL, tsL 
+    classLabels = data[:,0]
+    features = data[:,-1] #features are the % of packets lost 0, 25, 50, 75, or 100%
+    clEncoder = LabelEncoder() #use label encoder to encode the "Destination Reachable" and "Destination Unreachable" labels
+    classLabels = clEncoder.fit_transform(classLabels)
+    features = features.reshape(-1,1) #reshape for fit
+    trF, tsF, trL, tsL = train_test_split(features,classLabels, test_size = 0.2) #test size of 2.0
+
+dataPrep()
+
+def modelTrain():
+    global tsL
+    global predictions
+    mlModel = DecisionTreeClassifier() #decision tree classifier is a bit better for classification problems
+    mlModel.fit(trF,trL)
+    predictions = mlModel.predict(tsF)
+    tsL = tsL.reshape(-1,1) #reshape for benchmarks
+    
+modelTrain()
+
+def benchMarks():
+    cMatrix = confusion_matrix(tsL,predictions) 
+    accScore = (accuracy_score(tsL, predictions)*100)
+    recScore = (recall_score(tsL,predictions)*100)
+    preScore = (precision_score(tsL,predictions)*100)
+    f1Score = (f1_score(tsL,predictions)*100)
+    print ("The machine demonstrated the following true/false confusion matrix values:\n", cMatrix)
+    print (accScore, '% ' + 'is the accuracy score')
+    print (recScore, '% ' + 'is the recall score')
+    print (preScore, '% ' + 'is the precision score')
+    print (f1Score, '% ' + 'is the f1 score')
+    
+benchMarks()
